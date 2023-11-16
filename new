@@ -1,0 +1,145 @@
+from string import punctuation, whitespace
+from unidecode import unidecode
+import sys
+
+# TASK 1
+
+def words_extraction(path_to_file):
+    lineno = 0 # counter starts at 0
+    words = [] # empty list
+    with open(path_to_file, encoding="utf-8") as f:
+        for line in f:
+            line = unidecode(line)
+            print(line.strip())
+# replace all punctation with space
+# call split for all words
+# cant remove each puntaction one by one
+
+    #file = open(path_to_file, 'r+')
+    # open file
+    # 'r+' reads and writes the open file
+    #outputfile = open("output_file.txt", "w") # makes the changes to the file and sends it, back to the output file
+    #file_line = file.readline() # reads first line in text
+    """
+    while file_line:
+        #file_line = str(codecs.encode(file_line, 'utf-8'))
+        #file_line = unidecode(file_line)
+        lineno+=1
+        print(f"lineno{lineno} line{file_line}")
+        # intialize modified line
+        line = ""
+        # loop through file and check for punctations, whitespaces, and numbers (0123456789)
+        for letter in file_line:
+            if letter not in punctuation and letter!=whitespace and letter not in "0123456789": # if letter is not in punctation, not a whitespace, and not any number
+                if letter!=" ":
+                    letter = letter.lower() # lowercases every letter
+                line+=letter
+            else:
+                line+=" "
+        words+=[line]
+        
+        file_line = file.readline()
+    file.close()
+    outputfile.writelines(words)
+    return words
+"""
+
+print(words_extraction("test1.txt"))
+
+# TASK 2
+# we have to re open book
+# header starts at *** Start
+# function gets list of all of words
+# converts list of words to set
+# list of words is unique words
+# set doesnt allow duplicate, only will keep unique
+
+def count_word(path_to_book):
+    # words is a list of strings, where each string is the lines of the book from the previous function
+    book = words_extraction(path_to_book)
+    dictionary = dict()
+
+    # loop through lines in words variable for preface line to mark beginning of book
+    for i in range(len(book)):
+        # we found line
+        if "start of the project" in book[i]:
+            # header ends at "start of the project"
+            # ignore every previous line
+            book = book[i+1:]
+            break
+
+    for line in book:
+        # words is a list of each word in line
+        words = line.split(" ")
+        for word in words:
+            # remove whitespaces and new line symbols
+            word = word.replace("\n", "")
+            if word=="":
+                continue
+            # intialize count for word
+            if word not in dictionary:
+                dictionary[word]=0
+            # increment word frequency to show number of times each word has occurred
+            dictionary[word]+=1
+    return len(dictionary)
+
+def words_in_book(path_to_book):
+    # words is a list of strings, where each string is the lines of the book from perevious function
+    book = words_extraction(path_to_book)
+    dictionary = dict()
+
+    # loop through lines in words variable for preface line to mark beginning of book
+    for i in range(len(book)):
+        # we found line
+        if "start of the project" in book[i]:
+            # ignore every previous line
+            book = book[i+1:]
+            break
+
+    for line in book:
+        # words is a list of each word in line
+        words = line.split(" ")
+        for word in words:
+            # remove whitespaces and new line symbols
+            word = word.replace("\n", "")
+            if word=="":
+                continue
+            # intialize count for word
+            if word not in dictionary:
+                dictionary[word]=0
+            # increment word frequency to show number of times each word has occurred
+            dictionary[word]+=1
+    return dictionary
+
+#print(count_word("test.txt"))
+
+# TASK 3
+# returns list of words
+# words in book but not in list
+# get set of words in task 2
+# go through word list in words.txt
+# create tupile
+# get set of unique words in novel and words.txt
+# goes through both sets
+
+# novel and words.txt
+# set of both which uses unique words
+
+def words_in_book_not_list(path_to_book):
+    words_in_book = words_in_book(path_to_book)
+    words_in_word_text = words_in_book("words.txt")
+
+    words_not_in_book = []
+    # word1 is word in book
+    # word2 is words in the words.txt
+    for word1 in words_in_book:
+        for word2 in words_in_word_text:
+            if set(word1)-set(word2)!=set() or len(word1)!=len(word2):
+                words_not_in_book.append(word1)
+                break
+    return words_not_in_book
+
+#print(words_in_book_not_list("test1.txt"))
+
+
+# comment out the print statement you don't want your code to complete
